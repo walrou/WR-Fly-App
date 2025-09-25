@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>WR Fly</title>
   <style>
-    /* إعادة ضبط */
+    /* === إعادة ضبط عامة === */
     * {
       margin: 0;
       padding: 0;
@@ -14,10 +14,12 @@
     html, body {
       height: 100%;
       overflow: hidden;
-      font-family: Arial, sans-serif;
+      font-family: 'Segoe UI', Arial, sans-serif;
+      background: #0e0e10;
+      color: #fff;
     }
 
-    /* خلفية Canvas */
+    /* === خلفية Canvas متحركة === */
     canvas {
       position: fixed;
       top: 0;
@@ -25,69 +27,81 @@
       width: 100%;
       height: 100%;
       z-index: -2;
+      background: radial-gradient(circle at center, #0e0e10 0%, #050507 100%);
     }
 
-    /* طبقة ضبابية فوق الخلفية */
+    /* طبقة ضبابية خفيفة لزيادة الاحترافية */
     .blur-overlay {
       position: fixed;
       top: 0;
       left: 0;
       width: 100%;
       height: 100%;
-      backdrop-filter: blur(18px);
-      background: rgba(0, 0, 0, 0.2);
+      backdrop-filter: blur(14px);
+      background: rgba(0,0,0,0.25);
       z-index: -1;
     }
 
-    /* المحتوى الرئيسي */
+    /* === المحتوى الرئيسي === */
     .content {
       position: absolute;
       top: 50%;
       left: 50%;
       transform: translate(-50%, -50%);
       text-align: center;
-      color: white;
     }
 
+    /* أيقونة التطبيق */
     .logo {
       width: 120px;
       height: 120px;
-      border-radius: 20px;
       margin-bottom: 20px;
-      box-shadow: 0 0 25px rgba(255, 255, 255, 0.6);
+      border-radius: 22px;
+      box-shadow: 0 0 30px rgba(0, 123, 255, 0.5);
+      transition: transform 0.6s ease, box-shadow 0.6s ease;
+    }
+    .logo:hover {
+      transform: scale(1.05);
+      box-shadow: 0 0 40px rgba(0, 123, 255, 0.8);
     }
 
+    /* اسم التطبيق */
     .title {
-      font-size: 2.5rem;
-      font-weight: bold;
-      margin-bottom: 30px;
-      text-shadow: 0 0 15px rgba(0, 0, 0, 0.7);
+      font-size: 2.8rem;
+      font-weight: 700;
+      letter-spacing: 2px;
+      margin-bottom: 35px;
+      text-shadow: 0 0 25px rgba(0, 123, 255, 0.6);
     }
 
+    /* زر التحميل */
     .download-btn {
       display: inline-block;
-      background: #007BFF;
+      background: linear-gradient(90deg, #007BFF, #00D4FF);
       color: white;
-      padding: 14px 30px;
+      padding: 14px 38px;
       font-size: 1.2rem;
       font-weight: bold;
-      border-radius: 30px;
+      border-radius: 35px;
       text-decoration: none;
-      transition: 0.3s;
+      transition: 0.3s ease;
+      box-shadow: 0 0 15px rgba(0, 123, 255, 0.5);
     }
     .download-btn:hover {
-      background: #0056b3;
+      background: linear-gradient(90deg, #0061cc, #00a6cc);
+      box-shadow: 0 0 25px rgba(0, 123, 255, 0.8);
+      transform: translateY(-2px);
     }
   </style>
 </head>
 <body>
-  <!-- Canvas لرسم الخلفية الديناميكية -->
+  <!-- خلفية Canvas -->
   <canvas id="background"></canvas>
 
-  <!-- طبقة الضبابية -->
+  <!-- طبقة ضبابية أنيقة -->
   <div class="blur-overlay"></div>
 
-  <!-- المحتوى -->
+  <!-- المحتوى الرئيسي -->
   <div class="content">
     <img src="assets/app-icon.png" alt="WR Fly Logo" class="logo">
     <div class="title">WR Fly</div>
@@ -95,19 +109,69 @@
   </div>
 
   <script>
-    /* رسم خلفية متحركة ديناميكية */
+    /** 
+     * أنيميشن خلفية احترافي
+     * أشكال عضوية ناعمة تتحرك مثل سائل
+     */
     const canvas = document.getElementById('background');
     const ctx = canvas.getContext('2d');
-
     let width = window.innerWidth;
     let height = window.innerHeight;
+
     canvas.width = width;
     canvas.height = height;
 
-    // تحديث الحجم عند تغيير أبعاد الشاشة
     window.addEventListener('resize', () => {
       width = window.innerWidth;
       height = window.innerHeight;
+      canvas.width = width;
+      canvas.height = height;
+    });
+
+    // جزيئات متحركة
+    const particles = [];
+    const colors = ['#007BFF', '#00D4FF', '#6A00FF', '#00FFA3'];
+
+    for (let i = 0; i < 20; i++) {
+      particles.push({
+        x: Math.random() * width,
+        y: Math.random() * height,
+        radius: Math.random() * 120 + 80,
+        color: colors[Math.floor(Math.random() * colors.length)],
+        dx: (Math.random() - 0.5) * 0.4,
+        dy: (Math.random() - 0.5) * 0.4
+      });
+    }
+
+    function draw() {
+      ctx.clearRect(0, 0, width, height);
+
+      particles.forEach(p => {
+        const gradient = ctx.createRadialGradient(p.x, p.y, p.radius * 0.1, p.x, p.y, p.radius);
+        gradient.addColorStop(0, p.color);
+        gradient.addColorStop(1, 'transparent');
+
+        ctx.beginPath();
+        ctx.fillStyle = gradient;
+        ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
+        ctx.fill();
+
+        // حركة الجزيئات
+        p.x += p.dx;
+        p.y += p.dy;
+
+        // ارتداد عند الحواف
+        if (p.x < -p.radius || p.x > width + p.radius) p.dx *= -1;
+        if (p.y < -p.radius || p.y > height + p.radius) p.dy *= -1;
+      });
+
+      requestAnimationFrame(draw);
+    }
+
+    draw();
+  </script>
+</body>
+</html>      height = window.innerHeight;
       canvas.width = width;
       canvas.height = height;
     });
