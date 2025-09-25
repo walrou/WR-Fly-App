@@ -1,8 +1,10 @@
 <!DOCTYPE html>
-<html lang="ar" dir="rtl">
+<html lang="en" dir="ltr" translate="no">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="google" content="notranslate">
+  <meta http-equiv="Content-Language" content="en">
   <title>WR Fly</title>
   <style>
     /* === إعادة ضبط عامة === */
@@ -13,42 +15,42 @@
     }
     html, body {
       height: 100%;
+      width: 100%;
       overflow: hidden;
       font-family: 'Segoe UI', Arial, sans-serif;
       background: #0e0e10;
       color: #fff;
     }
 
-    /* === خلفية Canvas متحركة === */
-    canvas {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      z-index: -2;
-      background: radial-gradient(circle at center, #0e0e10 0%, #050507 100%);
+    /* === خلفية بصورة === */
+    body {
+      background: url('assets/ww.png') no-repeat center center fixed;
+      background-size: cover;
     }
 
-    /* طبقة ضبابية لزيادة الاحترافية */
-    .blur-overlay {
+    /* شريط أعلى الصفحة */
+    .top-bar {
       position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      backdrop-filter: blur(12px);
-      background: rgba(0,0,0,0.2);
-      z-index: -1;
+      top: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      font-size: 1.1rem;
+      font-weight: 500;
+      letter-spacing: 1px;
+      color: #ffffffcc;
+      text-shadow: 0 0 6px rgba(0,0,0,0.5);
+      animation: fadeDown 1.2s ease;
     }
 
-    /* === المحتوى الرئيسي === */
+    /* المحتوى الرئيسي */
     .content {
       position: absolute;
       top: 50%;
       left: 50%;
       transform: translate(-50%, -50%);
       text-align: center;
+      width: 90%;
+      max-width: 400px;
     }
 
     /* أيقونة التطبيق */
@@ -58,20 +60,21 @@
       margin-bottom: 20px;
       border-radius: 22px;
       box-shadow: 0 0 30px rgba(0, 123, 255, 0.5);
-      transition: transform 0.6s ease, box-shadow 0.6s ease;
-    }
-    .logo:hover {
-      transform: scale(1.05);
-      box-shadow: 0 0 40px rgba(0, 123, 255, 0.8);
+      opacity: 0;
+      transform: scale(0.8);
+      animation: fadeUp 1s ease forwards;
     }
 
     /* اسم التطبيق */
     .title {
-      font-size: 2.8rem;
+      font-size: 2.5rem;
       font-weight: 700;
       letter-spacing: 2px;
       margin-bottom: 35px;
-      text-shadow: 0 0 25px rgba(0, 123, 255, 0.6);
+      text-shadow: 0 0 20px rgba(0, 123, 255, 0.6);
+      opacity: 0;
+      animation: fadeUp 1.4s ease forwards;
+      animation-delay: 0.3s;
     }
 
     /* زر التحميل */
@@ -86,92 +89,64 @@
       text-decoration: none;
       transition: 0.3s ease;
       box-shadow: 0 0 15px rgba(0, 123, 255, 0.5);
+      opacity: 0;
+      animation: fadeUp 1.4s ease forwards;
+      animation-delay: 0.6s;
     }
     .download-btn:hover {
       background: linear-gradient(90deg, #0061cc, #00a6cc);
       box-shadow: 0 0 25px rgba(0, 123, 255, 0.8);
       transform: translateY(-2px);
     }
+
+    /* === أنيميشنات === */
+    @keyframes fadeUp {
+      0% {
+        opacity: 0;
+        transform: translateY(20px) scale(0.95);
+      }
+      100% {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+      }
+    }
+
+    @keyframes fadeDown {
+      0% {
+        opacity: 0;
+        transform: translateY(-20px);
+      }
+      100% {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    /* === Responsive للشاشات الصغيرة === */
+    @media (max-width: 480px) {
+      .title {
+        font-size: 2rem;
+      }
+      .logo {
+        width: 100px;
+        height: 100px;
+      }
+      .download-btn {
+        font-size: 1rem;
+        padding: 12px 30px;
+      }
+    }
   </style>
 </head>
 <body>
-  <!-- خلفية Canvas -->
-  <canvas id="background"></canvas>
-
-  <!-- طبقة ضبابية أنيقة -->
-  <div class="blur-overlay"></div>
+  <!-- النص العلوي -->
+  <div class="top-bar">Developed by WAL × ROU</div>
 
   <!-- المحتوى الرئيسي -->
   <div class="content">
     <img src="assets/app-icon.png" alt="WR Fly Logo" class="logo">
     <div class="title">WR Fly</div>
-    <a href="assets/WR-Fly.apk" class="download-btn" download>تحميل التطبيق</a>
+    <a href="assets/WR-Fly.apk" class="download-btn" download>Download App</a>
   </div>
-
-  <script>
-    /** 
-     * خلفية متدرجة متحركة مثل السوائل
-     * حركة سريعة نسبياً
-     */
-    const canvas = document.getElementById('background');
-    const ctx = canvas.getContext('2d');
-    let width = window.innerWidth;
-    let height = window.innerHeight;
-
-    canvas.width = width;
-    canvas.height = height;
-
-    window.addEventListener('resize', () => {
-      width = window.innerWidth;
-      height = window.innerHeight;
-      canvas.width = width;
-      canvas.height = height;
-    });
-
-    const colors = [
-      { r: 138, g: 43, b: 226 }, // بنفسجي
-      { r: 0, g: 191, b: 255 },  // أزرق سماوي
-      { r: 255, g: 0, b: 255 },  // فوشي
-      { r: 0, g: 255, b: 255 }   // تركوازي فاتح
-    ];
-
-    const blobs = [];
-    for (let i = 0; i < 6; i++) {
-      blobs.push({
-        x: Math.random() * width,
-        y: Math.random() * height,
-        radius: 250 + Math.random() * 150,
-        dx: (Math.random() - 0.5) * 1.2,
-        dy: (Math.random() - 0.5) * 1.2,
-        color: colors[Math.floor(Math.random() * colors.length)]
-      });
-    }
-
-    function draw() {
-      ctx.clearRect(0, 0, width, height);
-
-      blobs.forEach(blob => {
-        const gradient = ctx.createRadialGradient(blob.x, blob.y, blob.radius * 0.2, blob.x, blob.y, blob.radius);
-        gradient.addColorStop(0, `rgba(${blob.color.r},${blob.color.g},${blob.color.b},0.6)`);
-        gradient.addColorStop(1, 'transparent');
-
-        ctx.beginPath();
-        ctx.fillStyle = gradient;
-        ctx.arc(blob.x, blob.y, blob.radius, 0, Math.PI * 2);
-        ctx.fill();
-
-        // حركة سريعة
-        blob.x += blob.dx;
-        blob.y += blob.dy;
-
-        if (blob.x < -blob.radius || blob.x > width + blob.radius) blob.dx *= -1;
-        if (blob.y < -blob.radius || blob.y > height + blob.radius) blob.dy *= -1;
-      });
-
-      requestAnimationFrame(draw);
-    }
-
-    draw();
-  </script>
 </body>
 </html>
