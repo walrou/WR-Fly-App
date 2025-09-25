@@ -10,17 +10,15 @@ html, body {
   height: 100%;
   width: 100%;
   overflow: hidden;
+  background: #000;
   display: flex;
   justify-content: center;
   align-items: center;
-  background: #000;
-  color: white;
-  text-align: center;
 }
 
-/* ===== الخلفية Aurora (من الكود المرسل) ===== */
+/* ===== الخلفية Aurora ===== */
 .container {
-  position: absolute;
+  position: fixed;
   top: 0;
   left: 0;
   width: 100%;
@@ -42,99 +40,27 @@ html, body {
     ),
     linear-gradient(135deg, #000000 0%, #0a0520 100%);
   background-blend-mode: overlay, screen, hard-light;
-  overflow: hidden;
   animation: aurora-drift 25s infinite alternate ease-in-out;
-  z-index: -2;
-}
-
-.container::before {
-  content: "";
-  position: absolute;
-  width: 200%;
-  height: 200%;
-  top: -50%;
-  left: -50%;
-  background: repeating-linear-gradient(
-      45deg,
-      rgba(255, 255, 255, 0.02) 0px,
-      rgba(255, 255, 255, 0.02) 1px,
-      transparent 1px,
-      transparent 40px
-    ),
-    repeating-linear-gradient(
-      -45deg,
-      rgba(255, 255, 255, 0.03) 0px,
-      rgba(255, 255, 255, 0.03) 1px,
-      transparent 1px,
-      transparent 60px
-    );
-  animation: grid-shift 20s linear infinite;
   z-index: -1;
 }
 
-.container::after {
-  content: "";
-  position: absolute;
-  width: 100%;
-  height: 100%;
-  background: radial-gradient(
-    circle at center,
-    transparent 70%,
-    rgba(10, 5, 32, 0.9) 100%
-  );
-  animation: aurora-pulse 8s infinite alternate;
-  z-index: 0;
-}
-
+/* حركة الخلفية */
 @keyframes aurora-drift {
   0% {
-    background-position:
-      0% 0%,
-      0% 0%,
-      0% 0%;
+    background-position: 0% 0%, 0% 0%, 0% 0%;
     filter: hue-rotate(0deg) brightness(1);
   }
   50% {
-    background-position:
-      -10% -5%,
-      5% 10%,
-      0% 15%;
+    background-position: -10% -5%, 5% 10%, 0% 15%;
     filter: hue-rotate(30deg) brightness(1.2);
   }
   100% {
-    background-position:
-      5% 10%,
-      -10% -5%,
-      15% 0%;
+    background-position: 5% 10%, -10% -5%, 15% 0%;
     filter: hue-rotate(60deg) brightness(1);
   }
 }
 
-@keyframes grid-shift {
-  0% {
-    transform: translate(0, 0);
-  }
-  100% {
-    transform: translate(-50%, -50%);
-  }
-}
-
-@keyframes aurora-pulse {
-  0% {
-    opacity: 0.8;
-    transform: scale(1);
-  }
-  50% {
-    opacity: 0.5;
-    transform: scale(1.05);
-  }
-  100% {
-    opacity: 0.8;
-    transform: scale(1);
-  }
-}
-
-/* ===== المحتوى الرئيسي ===== */
+/* ===== المحتوى ===== */
 .overlay {
   position: relative;
   z-index: 10;
@@ -150,6 +76,8 @@ html, body {
   flex-direction: column;
   align-items: center;
   gap: 20px;
+  text-align: center;
+  color: white;
 }
 
 /* أيقونة التطبيق */
@@ -165,7 +93,6 @@ html, body {
 .app-name {
   font-size: 2.5rem;
   font-weight: bold;
-  color: #ffffff;
   text-shadow: 0 0 15px rgba(0, 0, 0, 0.7);
   opacity: 0;
   animation: fade-up 1s ease forwards;
@@ -194,7 +121,7 @@ html, body {
   transform: scale(1.05);
 }
 
-/* ===== الأنيميشن ===== */
+/* ===== حركات العناصر ===== */
 @keyframes pop-in {
   0% { transform: scale(0); opacity: 0; }
   100% { transform: scale(1); opacity: 1; }
@@ -204,4 +131,3 @@ html, body {
   0% { opacity: 0; transform: translateY(20px); }
   100% { opacity: 1; transform: translateY(0); }
 }
-
