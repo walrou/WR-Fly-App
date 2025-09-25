@@ -30,15 +30,15 @@
       background: radial-gradient(circle at center, #0e0e10 0%, #050507 100%);
     }
 
-    /* طبقة ضبابية خفيفة لزيادة الاحترافية */
+    /* طبقة ضبابية لزيادة الاحترافية */
     .blur-overlay {
       position: fixed;
       top: 0;
       left: 0;
       width: 100%;
       height: 100%;
-      backdrop-filter: blur(14px);
-      background: rgba(0,0,0,0.25);
+      backdrop-filter: blur(12px);
+      background: rgba(0,0,0,0.2);
       z-index: -1;
     }
 
@@ -105,13 +105,13 @@
   <div class="content">
     <img src="assets/app-icon.png" alt="WR Fly Logo" class="logo">
     <div class="title">WR Fly</div>
-    <a href="assets/WRFly.apk" class="download-btn" download>تحميل التطبيق</a>
+    <a href="assets/WR-Fly.apk" class="download-btn" download>تحميل التطبيق</a>
   </div>
 
   <script>
     /** 
-     * أنيميشن خلفية احترافي
-     * أشكال عضوية ناعمة تتحرك مثل سائل
+     * خلفية متدرجة متحركة مثل السوائل
+     * حركة سريعة نسبياً
      */
     const canvas = document.getElementById('background');
     const ctx = canvas.getContext('2d');
@@ -128,89 +128,44 @@
       canvas.height = height;
     });
 
-    // جزيئات متحركة
-    const particles = [];
-    const colors = ['#007BFF', '#00D4FF', '#6A00FF', '#00FFA3'];
+    const colors = [
+      { r: 138, g: 43, b: 226 }, // بنفسجي
+      { r: 0, g: 191, b: 255 },  // أزرق سماوي
+      { r: 255, g: 0, b: 255 },  // فوشي
+      { r: 0, g: 255, b: 255 }   // تركوازي فاتح
+    ];
 
-    for (let i = 0; i < 20; i++) {
-      particles.push({
+    const blobs = [];
+    for (let i = 0; i < 6; i++) {
+      blobs.push({
         x: Math.random() * width,
         y: Math.random() * height,
-        radius: Math.random() * 120 + 80,
-        color: colors[Math.floor(Math.random() * colors.length)],
-        dx: (Math.random() - 0.5) * 0.4,
-        dy: (Math.random() - 0.5) * 0.4
+        radius: 250 + Math.random() * 150,
+        dx: (Math.random() - 0.5) * 1.2,
+        dy: (Math.random() - 0.5) * 1.2,
+        color: colors[Math.floor(Math.random() * colors.length)]
       });
     }
 
     function draw() {
       ctx.clearRect(0, 0, width, height);
 
-      particles.forEach(p => {
-        const gradient = ctx.createRadialGradient(p.x, p.y, p.radius * 0.1, p.x, p.y, p.radius);
-        gradient.addColorStop(0, p.color);
+      blobs.forEach(blob => {
+        const gradient = ctx.createRadialGradient(blob.x, blob.y, blob.radius * 0.2, blob.x, blob.y, blob.radius);
+        gradient.addColorStop(0, `rgba(${blob.color.r},${blob.color.g},${blob.color.b},0.6)`);
         gradient.addColorStop(1, 'transparent');
 
         ctx.beginPath();
         ctx.fillStyle = gradient;
-        ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
+        ctx.arc(blob.x, blob.y, blob.radius, 0, Math.PI * 2);
         ctx.fill();
 
-        // حركة الجزيئات
-        p.x += p.dx;
-        p.y += p.dy;
+        // حركة سريعة
+        blob.x += blob.dx;
+        blob.y += blob.dy;
 
-        // ارتداد عند الحواف
-        if (p.x < -p.radius || p.x > width + p.radius) p.dx *= -1;
-        if (p.y < -p.radius || p.y > height + p.radius) p.dy *= -1;
-      });
-
-      requestAnimationFrame(draw);
-    }
-
-    draw();
-  </script>
-</body>
-</html>      height = window.innerHeight;
-      canvas.width = width;
-      canvas.height = height;
-    });
-
-    // إنشاء دوائر ملونة متحركة
-    const colors = ['#ff005c', '#00f7ff', '#ffdd00', '#a200ff', '#00ff87'];
-    const circles = [];
-
-    for (let i = 0; i < 25; i++) {
-      circles.push({
-        x: Math.random() * width,
-        y: Math.random() * height,
-        radius: Math.random() * 100 + 50,
-        color: colors[Math.floor(Math.random() * colors.length)],
-        dx: (Math.random() - 0.5) * 0.5,
-        dy: (Math.random() - 0.5) * 0.5
-      });
-    }
-
-    function draw() {
-      ctx.clearRect(0, 0, width, height);
-
-      circles.forEach(c => {
-        ctx.beginPath();
-        const gradient = ctx.createRadialGradient(c.x, c.y, c.radius * 0.1, c.x, c.y, c.radius);
-        gradient.addColorStop(0, c.color);
-        gradient.addColorStop(1, 'transparent');
-
-        ctx.fillStyle = gradient;
-        ctx.arc(c.x, c.y, c.radius, 0, Math.PI * 2);
-        ctx.fill();
-
-        // تحريك الدوائر
-        c.x += c.dx;
-        c.y += c.dy;
-
-        // ارتداد عند الحدود
-        if (c.x < 0 || c.x > width) c.dx *= -1;
-        if (c.y < 0 || c.y > height) c.dy *= -1;
+        if (blob.x < -blob.radius || blob.x > width + blob.radius) blob.dx *= -1;
+        if (blob.y < -blob.radius || blob.y > height + blob.radius) blob.dy *= -1;
       });
 
       requestAnimationFrame(draw);
